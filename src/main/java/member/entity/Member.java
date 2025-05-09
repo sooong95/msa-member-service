@@ -10,8 +10,9 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Member extends TimeStamp {
+
+    // item entity 직접 참조 x. item entity 의 식별만 저장.
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -27,4 +28,5 @@ public class Member extends TimeStamp {
 
     private String password;
 
+    private Long itemId;
 }
