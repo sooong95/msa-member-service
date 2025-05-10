@@ -1,4 +1,21 @@
-FROM ubuntu:latest
-LABEL authors="song"
+FROM gradle:8.10.2-jdk21 AS build
 
-ENTRYPOINT ["top", "-b"]
+WORKDIR /app
+
+COPY build.gradle settings.gradle ./
+
+RUN gradle dependencies --no-daemon
+
+COPY . /app
+
+RUN gradle clean build --no-daemon
+
+FROM openjdk:21-jdk-slim
+
+WORKDIR /app
+
+COPY --from=build /app/build/libs/*.jar /app/sj.jar
+
+EXPOSE 8080
+ENTRYPOINT ["java"]
+CMD ["-jar", "sj.jar"]
