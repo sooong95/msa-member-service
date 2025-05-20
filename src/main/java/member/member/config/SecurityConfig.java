@@ -71,7 +71,7 @@ public class SecurityConfig {
 
         // 경로별 인가 작업
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/", "/join", "/join/shop","/shopSearch", "/member/join", "/member/home").permitAll() // 해당 경로는 모든 권한 허용
+                .requestMatchers("/login", "/", "/join", "/member/join", "/member/login", "/member/test").permitAll() // 해당 경로는 모든 권한 허용
                 .requestMatchers("/admin").hasRole("ADMIN")
                 .requestMatchers("/shop", "/shop/**").hasRole("SHOP")// 해당 권한이 있는 사용자만 허용
                 .requestMatchers("/order", "/order/**", "/item", "/item/**", "/bill", "/bill/**").hasRole("MEMBER")
@@ -83,6 +83,7 @@ public class SecurityConfig {
 
         // addFilterAt => 기존에 있던 UsernamePasswordAuthenticationFilter 대신 커스텀한 LoginFilter 로 대체
         http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtils), UsernamePasswordAuthenticationFilter.class);
+
 
         // 세션 설정. jwt 는 세션을 stateless 상태로 관리.
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

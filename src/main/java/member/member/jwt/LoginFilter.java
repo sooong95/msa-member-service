@@ -7,6 +7,7 @@ import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import member.member.dto.CustomUserDetails;
 import member.member.dto.LoginDto;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Iterator;
 
+@Slf4j
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -52,12 +54,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             loginDto = objectMapper.readValue(requestBody, LoginDto.class);
 
         } catch (IOException e) {
+            log.info("에러 메세지 = {}", e);
             throw new RuntimeException(e);
         }
 
         // email, password 추출
         String email = loginDto.getEmail();
         String password = loginDto.getPassword();
+        log.info("로그인 dto email={}", email);
 
         // 스프링 시큐리티에서 email 과 password 를 검증하기 위해서는 token 에 담아야 한다.
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password, null);
